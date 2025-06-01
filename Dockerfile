@@ -1,16 +1,19 @@
 FROM php:8.2-apache
 
-# Enable mod_rewrite
+# Enable Apache rewrite module
 RUN a2enmod rewrite
 
-# Overwrite default site config to allow .htaccess
+# Install PDO MySQL extension
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Replace Apache default config to allow .htaccess
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy all PHP files to Apache web root
+# Copy all project files to the web root
 COPY . /var/www/html/
 
-# Set permissions
+# Fix ownership (optional)
 RUN chown -R www-data:www-data /var/www/html
 
-# Expose port 80
+# Expose HTTP port
 EXPOSE 80
