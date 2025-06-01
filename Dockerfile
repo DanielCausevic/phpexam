@@ -1,12 +1,12 @@
 FROM php:8.2-apache
 
-# Enable Apache mod_rewrite
+# Enable mod_rewrite
 RUN a2enmod rewrite
 
-# Install PDO MySQL extension
-RUN docker-php-ext-install pdo pdo_mysql
+# Overwrite default site config to allow .htaccess
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy all files to the web root
+# Copy all PHP files to Apache web root
 COPY . /var/www/html/
 
 # Set permissions
@@ -14,6 +14,3 @@ RUN chown -R www-data:www-data /var/www/html
 
 # Expose port 80
 EXPOSE 80
-
-# Allow .htaccess overrides
-RUN sed -i '/<Directory \/var\/www\/>/,/<\\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
