@@ -1,31 +1,78 @@
 <?php
 require_once "Database.php";
 require_once "ArtistController.php";
+require_once "AlbumController.php";
+require_once "TrackController.php";
+require_once "PlaylistController.php";
 require_once "Logger.php";
 
 Logger::log();
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode('/', trim($uri, '/'));
-
 $method = $_SERVER['REQUEST_METHOD'];
 
-if ($uri[0] !== 'artists') {
-    http_response_code(404);
-    echo json_encode(["error" => "Not Found"]);
-    exit;
-}
+header("Content-Type: application/json");
 
-$controller = new ArtistController();
+switch ($uri[0]) {
+    case 'artists':
+        $controller = new ArtistController();
+        if ($method === 'GET' && count($uri) === 1) {
+            $controller->getAll();
+        } elseif ($method === 'GET' && count($uri) === 2) {
+            $controller->getById($uri[1]);
+        } elseif ($method === 'POST' && count($uri) === 1) {
+            $controller->create($_POST['name'] ?? null);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Bad Request"]);
+        }
+        break;
 
-if ($method === 'GET' && count($uri) === 1) {
-    $controller->getAll();
-} elseif ($method === 'GET' && count($uri) === 2) {
-    $controller->getById($uri[1]);
-} elseif ($method === 'POST' && count($uri) === 1) {
-    $controller->create($_POST['name'] ?? null);
-} else {
-    http_response_code(400);
-    echo json_encode(["error" => "Bad Request"]);
+    case 'albums':
+        $controller = new AlbumController();
+        if ($method === 'GET' && count($uri) === 1) {
+            $controller->getAll();
+        } elseif ($method === 'GET' && count($uri) === 2) {
+            $controller->getById($uri[1]);
+        } elseif ($method === 'POST' && count($uri) === 1) {
+            $controller->create($_POST['title'] ?? null, $_POST['artist_id'] ?? null);
+        } elseif ($method === 'DELETE' && count($uri) === 2) {
+            $controller->delete($uri[1]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Bad Request"]);
+        }
+        break;
+
+    case 'tracks':
+        $controller = new TrackController();
+        if ($method === 'GET' && count($uri) === 2) {
+            $controller->getById($uri[1]);
+        } elseif ($method === 'POST' && count($uri) === 1) {
+            $controller->create($_POST); // Expect all required fields in $_POST
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Bad Request"]);
+        }
+        break;
+
+    case 'playlists':
+        $controller = new PlaylistController();
+        if ($method === 'GET' && count($uri) === 1) {
+            $controller->getAll();
+        } elseif ($method === 'POST' && count($uri) === 1) {
+            $controller->create($_POST['name'] ?? null);
+        } elseif ($method === 'DELETE' && count($uri) === 2) {
+            $controller->delete($uri[1]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Bad Request"]);
+        }
+        break;
+
+    default:
+        http_response_code(404);
+        echo json_encode(["error" => "Not Found"]);
 }
 ?>
