@@ -10,9 +10,9 @@ class TrackController {
     public function getById($id) {
         $stmt = $this->db->prepare("
             SELECT t.Name, t.Composer, g.Name AS Genre, m.Name AS MediaType
-            FROM tracks t
-            JOIN genres g ON t.GenreId = g.GenreId
-            JOIN media_types m ON t.MediaTypeId = m.MediaTypeId
+            FROM Track t
+            JOIN Genre g ON t.GenreId = g.GenreId
+            JOIN MediaType m ON t.MediaTypeId = m.MediaTypeId
             WHERE t.TrackId = ?
         ");
         $stmt->execute([$id]);
@@ -35,7 +35,7 @@ class TrackController {
             }
         }
         $stmt = $this->db->prepare("
-            INSERT INTO tracks (Name, AlbumId, MediaTypeId, GenreId, Composer, Milliseconds, Bytes, UnitPrice)
+            INSERT INTO Track (Name, AlbumId, MediaTypeId, GenreId, Composer, Milliseconds, Bytes, UnitPrice)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([

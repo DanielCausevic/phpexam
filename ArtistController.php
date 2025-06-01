@@ -8,12 +8,12 @@ class ArtistController {
     }
 
     public function getAll() {
-        $stmt = $this->db->query("SELECT * FROM artists");
+        $stmt = $this->db->query("SELECT * FROM Artist");
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM artists WHERE ArtistId = ?");
+        $stmt = $this->db->prepare("SELECT * FROM Artist WHERE ArtistId = ?");
         $stmt->execute([$id]);
         $artist = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -32,7 +32,7 @@ class ArtistController {
             return;
         }
 
-        $stmt = $this->db->prepare("INSERT INTO artists (Name) VALUES (?)");
+        $stmt = $this->db->prepare("INSERT INTO Artist (Name) VALUES (?)");
         $stmt->execute([$name]);
 
         http_response_code(201);
