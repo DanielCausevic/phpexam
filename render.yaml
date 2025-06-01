@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: chinook-api
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    rootDir: .
