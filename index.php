@@ -25,6 +25,8 @@ switch ($uri[0]) {
             $controller->create($_POST['name'] ?? null);
         } elseif ($method === 'DELETE' && count($uri) === 2) {
             $controller->delete($uri[1]);
+        } elseif ($method === 'GET' && count($uri) === 3 && $uri[2] === 'albums') {
+            $controller->getAlbumsByArtist($uri[1]);
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Bad Request"]);

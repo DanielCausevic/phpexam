@@ -56,6 +56,23 @@ class ArtistController {
     http_response_code(200);
     echo json_encode(["success" => true]);
 }
+    public function getAlbumsByArtist($artistId) {
+    $stmt = $this->db->prepare("
+        SELECT Album.AlbumId, Album.Title 
+        FROM Album 
+        WHERE Album.ArtistId = ?
+    ");
+    $stmt->execute([$artistId]);
+    $albums = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($albums) {
+        echo json_encode($albums);
+    } else {
+        http_response_code(404);
+        echo json_encode(["error" => "No albums found for this artist"]);
+    }
+}
+
 
 }
 ?>
