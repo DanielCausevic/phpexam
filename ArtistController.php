@@ -38,5 +38,24 @@ class ArtistController {
         http_response_code(201);
         echo json_encode(["success" => true, "id" => $this->db->lastInsertId()]);
     }
+    public function delete($id) {
+        // Check if artist has albums
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM Album WHERE ArtistId = ?");
+        $stmt->execute([$id]);
+
+        if ($stmt->fetchColumn() > 0) {
+            http_response_code(400);
+        echo json_encode(["error" => "Artist has albums and cannot be deleted"]);
+        return;
+    }
+
+    // Delete artist
+    $stmt = $this->db->prepare("DELETE FROM Artist WHERE ArtistId = ?");
+    $stmt->execute([$id]);
+
+    http_response_code(200);
+    echo json_encode(["success" => true]);
+}
+
 }
 ?>
