@@ -45,5 +45,24 @@ class TrackController {
         http_response_code(201);
         echo json_encode(["success" => true, "id" => $this->db->lastInsertId()]);
     }
+    public function delete($id) {
+    // Check if the track is part of any playlist
+    $stmt = $this->db->prepare("SELECT COUNT(*) FROM PlaylistTrack WHERE TrackId = ?");
+    $stmt->execute([$id]);
+
+    if ($stmt->fetchColumn() > 0) {
+        http_response_code(400);
+        echo json_encode(["error" => "Track is in a playlist and cannot be deleted"]);
+        return;
+    }
+
+    // Delete the track
+    $stmt = $this->db->prepare("DELETE FROM Track WHERE TrackId = ?");
+    $stmt->execute([$id]);
+
+    http_response_code(200);
+    echo json_encode(["success" => true]);
+}
+
 }
 ?>

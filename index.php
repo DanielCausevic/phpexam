@@ -52,12 +52,15 @@ switch ($uri[0]) {
         if ($method === 'GET' && count($uri) === 2) {
             $controller->getById($uri[1]);
         } elseif ($method === 'POST' && count($uri) === 1) {
-            $controller->create($_POST); // Expect all required fields in $_POST
+            $controller->create($_POST);
+        } elseif ($method === 'DELETE' && count($uri) === 2) {
+            $controller->delete($uri[1]);
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Bad Request"]);
         }
         break;
+
 
     case 'playlists':
         $controller = new PlaylistController();
