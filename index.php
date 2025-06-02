@@ -4,6 +4,7 @@ require_once "ArtistController.php";
 require_once "AlbumController.php";
 require_once "TrackController.php";
 require_once "PlaylistController.php";
+require_once "GenresController.php";
 require_once "Logger.php";
 
 Logger::log();

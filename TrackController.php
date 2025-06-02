@@ -24,6 +24,9 @@ class TrackController {
             echo json_encode(["error" => "Track not found"]);
         }
     }
+    public function getGenres(){
+        
+    }
 
     public function create($data) {
         $required = ['name', 'album_id', 'media_type_id', 'genre_id', 'composer', 'milliseconds', 'bytes', 'unit_price'];
