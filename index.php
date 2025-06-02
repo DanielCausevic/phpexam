@@ -23,6 +23,8 @@ switch ($uri[0]) {
             $controller->getById($uri[1]);
         } elseif ($method === 'POST' && count($uri) === 1) {
             $controller->create($_POST['name'] ?? null);
+        } elseif ($method === 'DELETE' && count($uri) === 2) {
+            $controller->delete($uri[1]);
         } else {
             http_response_code(400);
             echo json_encode(["error" => "Bad Request"]);
