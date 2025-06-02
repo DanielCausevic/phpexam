@@ -77,6 +77,15 @@ switch ($uri[0]) {
             echo json_encode(["error" => "Bad Request"]);
         }
         break;
+    case 'genres':
+        $controller = new TrackController();
+        if ($method === 'GET' && count($uri) === 1) {
+            $controller->getGenres();
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Bad Request"]);
+        }
+        break;
 
     default:
         http_response_code(404);
